@@ -1,0 +1,16 @@
+Package: btse
+Title: Bayesian Time Series Econometrics
+Version: 0.0.0.9000
+Authors@R: 
+    person("Xiaolei", "Wang", , "adamwang15@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Implementations of many Bayesian time series models for Econometrics research.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+Imports: 
+    Rcpp
