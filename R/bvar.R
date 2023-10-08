@@ -16,7 +16,6 @@ bvar <- function(Y, p, S, prior) {
 
     B_0 <- matrix(0, mp, m)
     V_0 <- diag((1:mp)^-2) * 10
-    # V_0 <- diag(mp)
     Lambda_0 <- diag(m)
     nu_0 <- 1
     prior <- list(B_0 = B_0, V_0 = V_0, Lambda_0 = Lambda_0, nu_0 = nu_0)
