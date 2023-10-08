@@ -21,21 +21,45 @@ blm_cpp <- function(Y, X, S, prior) {
 #'
 NULL
 
-bvar_cpp <- function(Y, k, S, prior) {
-    .Call(`_btse_bvar_cpp`, Y, k, S, prior)
+.bvar_cpp <- function(Y, p, S, prior) {
+    .Call(`_btse_bvar_cpp`, Y, p, S, prior)
 }
 
-#' Random draw from matrix normal
-#'
-#' Make a draw from MN(M, U, V)
-#'
-#' @param M mat n by m, mean matrix
-#' @param U mat n by n, covariance matrix of each column
-#' @param V mat m by m, covariance matrix of each row
+#' Estimate impulse response function
 #'
 NULL
 
-matnrnd_cpp <- function(M, U, V) {
-    .Call(`_btse_matnrnd_cpp`, M, U, V)
+.estimate_irf_cpp <- function(posterior, periods) {
+    .Call(`_btse_estimate_irf_cpp`, posterior, periods)
+}
+
+#' Long-run restriction identification
+#'
+#' Transform VAR(p) to VMA(infty) then compute Choleski decomposition
+#'
+NULL
+
+.identify_longrun_cpp <- function(posterior) {
+    .Call(`_btse_identify_longrun_cpp`, posterior)
+}
+
+#' Short-run restriction identification
+#'
+#' Choleski decomposition with ordering
+#'
+NULL
+
+.identify_shortrun_cpp <- function(posterior) {
+    .Call(`_btse_identify_shortrun_cpp`, posterior)
+}
+
+#' Sign restriction identification
+#'
+#' Draw orthonormal matrices Q until the sign restrictions are satisfied
+#'
+NULL
+
+.identify_sign_cpp <- function(posterior, sign) {
+    .Call(`_btse_identify_sign_cpp`, posterior, sign)
 }
 

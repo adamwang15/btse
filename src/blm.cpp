@@ -22,7 +22,7 @@ Rcpp::List blm_cpp(const arma::mat& Y,
                    const Rcpp::List& prior) {
   int n = Y.n_rows;
   int m = Y.n_cols;
-  int k = X.n_cols;
+  int mp = X.n_cols;
 
   // priors
   mat B_0 = prior["B_0"];
@@ -43,15 +43,15 @@ Rcpp::List blm_cpp(const arma::mat& Y,
   int nu_n = nu_0 + n;
 
   // draws
-  cube B_draws = zeros(k, m, S);
+  cube B_draws = zeros(m, mp, S);
   cube Sigma_draws = zeros(m, m, S);
-  mat B = zeros(k, m);
+  mat B = zeros(mp, m);
   mat Sigma = zeros(m, m);
   for(int s = 0; s < S; s++) {
     Sigma = iwishrnd(Lambda_n, nu_n);
     B = matnrnd_cpp(B_n, V_n, Sigma);  // conditional posterior of B
     Sigma_draws.slice(s) = Sigma;
-    B_draws.slice(s) = B;
+    B_draws.slice(s) = B.t();
   }
 
   Rcpp::List draws;

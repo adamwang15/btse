@@ -7,23 +7,23 @@ using namespace arma;
 //' Bayesian vector autoregression
 //'
 // [[Rcpp:interface(cpp)]]
-// [[Rcpp::export]]
-Rcpp::List bvar_cpp(const arma::mat Y,
-                    const int k,
-                    const int S,
-                    const Rcpp::List prior) {
-  // k = number of lags
+// [[Rcpp::export(.bvar_cpp)]]
+Rcpp::List bvar_cpp(const arma::mat& Y,
+                    const int& p,
+                    const int& S,
+                    const Rcpp::List& prior) {
+  // p = number of lags
   // construct X from Y
   int T = Y.n_rows;
-  int M = Y.n_cols;
-  mat X = zeros(T - k, k * M);
+  int m = Y.n_cols;
+  mat X = zeros(T - p, m * p);
 
-  for(int i = 0; i < k; i++) {
-    mat Y_lag = Y.rows(i + 1, T - k + i);
-    for(int j = 0; j < M; j++) {
-      X.col(i * M + j) = Y_lag.col(j);
+  for(int i = 0; i < p; i++) {
+    mat Y_lag = Y.rows(i + 1, T - p + i);
+    for(int j = 0; j < m; j++) {
+      X.col(i * m + j) = Y_lag.col(j);
     }
   }
 
-  return blm_cpp(Y.rows(0, T - k - 1), X, S, prior);
+  return blm_cpp(Y.rows(0, T - p - 1), X, S, prior);
 }

@@ -4,12 +4,12 @@
 \alias{bvar}
 \title{Bayesian vector autoregression}
 \usage{
-bvar(Y, k, S, prior)
+bvar(Y, p, S, prior)
 }
 \arguments{
 \item{Y}{dependent variables, n by m}
 
-\item{k}{number of lags}
+\item{p}{number of lags}
 
 \item{S}{number of draws}
 
