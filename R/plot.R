@@ -5,7 +5,7 @@
 #' @param posterior posterior draws with impulse response function
 #'
 #' @export
-plot_irf <- function(posterior, variable_names) {
+plot_irf <- function(posterior, variable_names, shock_names) {
   IRF <- posterior$IRF
   m <- nrow(IRF)
   periods <- ncol(IRF) / m
@@ -25,7 +25,7 @@ plot_irf <- function(posterior, variable_names) {
     c("median", "CI_95_lower", "CI_95_upper", "CI_68_lower", "CI_68_upper"),
     m * periods
   )
-  IRF["shock"] <- rep(rep(1:m, each = 5), periods)
+  IRF["shock"] <- rep(rep(shock_names, each = 5), periods)
   IRF["t"] <- rep(0:(periods - 1), each = 5 * m)
 
   IRF <- IRF |>
