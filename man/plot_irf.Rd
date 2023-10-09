@@ -4,7 +4,7 @@
 \alias{plot_irf}
 \title{Impulse response function}
 \usage{
-plot_irf(posterior, variable_names)
+plot_irf(posterior, variable_names, shock_names)
 }
 \arguments{
 \item{posterior}{posterior draws with impulse response function}
