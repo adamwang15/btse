@@ -7,14 +7,35 @@
 bsvar(Y, p, S, prior, identification, sign = NULL)
 }
 \arguments{
-\item{Y}{dependent variables, n by m}
+\item{Y}{variables, n by m, n observations/periods, m variables}
 
 \item{p}{number of lags}
 
 \item{S}{number of draws}
 
-\item{prior}{list of priors \eqn{(B_0,V_0,\Lambda_0,\nu_0)}}
+\item{prior}{list of priors \eqn{(A_0,V_0,\Lambda_0,\nu_0)}}
 }
 \description{
-Bayesian Structural vector autoregression
+Estimate a Bayesian Structural vector autoregression, base on the VAR(p) specification:
+\deqn{y_t = A_1 y_{t-1} + \cdots + A_p y_{t-p} + u_t}
+where \eqn{y_t} and \eqn{u_t} are \eqn{m \times 1}, \eqn{A_j} is \eqn{m \times m}.
+We can stack the \eqn{A_j}'s vertically
+such that \eqn{A=(A_1,\dots,A_p)'} which is \eqn{mp \times m}, and \eqn{y_{t-j}}'s vertically
+such that \eqn{x_t=(y_{t-1}',\cdots,y_{t-p}')'} which is \eqn{mp \times 1}. We have
+\deqn{y_t = A' x_t + u_t, \quad Y = XA + U}
+where \eqn{Y/U} are vertically stacked \eqn{y_t'/u_t'} and \eqn{n \times m},
+\eqn{X} is vertically stacked \eqn{x_t'} and \eqn{n \times mp}. \cr
+Now the conjugate homoskedastic Normal-Inverse-Wishart prior is
+\eqn{u_t|\Sigma\sim MN(0,I,\Sigma)} and
+\deqn{Y|A,\Sigma,X\sim MN(XA,I,\Sigma),\quad
+A|\Sigma,X\sim MN(A_0,V_0,\Sigma),\quad
+\Sigma|X\sim IW(\Lambda_0,\nu_0)}
+For SVAR, the forecast errors \eqn{u_t} can be decomposed to structural shocks \eqn{e_t}
+such that
+\deqn{u_t = P Q e_t}
+where \eqn{P,Q} are \eqn{m \times m}, \eqn{P=\text{chol}(\Sigma)} and
+\eqn{Q} is some orthogonal matrix (usually just the identity matrix \eqn{I}) since
+\deqn{\text{var}(PQe_t)=PQQ'P'=PP'=\Sigma=\text{var}(u_t) \Rightarrow P=\text{chol}(\Sigma)}
+Then, the model can be compactly written as
+\deqn{y_t = A' x_t + P Q e_t}
 }

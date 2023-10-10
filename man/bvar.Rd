@@ -13,7 +13,7 @@ bvar(Y, p, S, prior)
 
 \item{S}{number of draws}
 
-\item{prior}{list of priors \eqn{(B_0,V_0,\Lambda_0,\nu_0)}}
+\item{prior}{list of priors}
 }
 \description{
 Bayesian vector autoregression
