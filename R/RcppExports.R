@@ -4,8 +4,9 @@
 #' Bayesian linear model
 #'
 #' Bayesian linear regression with normal-inverse-Wishart conjugate prior
-#' prior: B ~ MN(B_0, V_0, Sigma), Sigma ~ IW(Lambda_0, nu_0)
+#' prior: A ~ MN(A_0, V_0, Sigma), Sigma ~ IW(Lambda_0, nu_0)
 #'
+#' @name blm_cpp
 #' @param Y dependent variables
 #' @param X independent variables
 #' @param S sample size
@@ -19,6 +20,8 @@ blm_cpp <- function(Y, X, S, prior) {
 
 #' Bayesian vector autoregression
 #'
+#' @name bvar_cpp
+#'
 NULL
 
 .bvar_cpp <- function(Y, p, S, prior) {
@@ -26,6 +29,8 @@ NULL
 }
 
 #' Estimate impulse response function
+#'
+#' @name estimate_irf_cpp
 #'
 NULL
 
@@ -37,6 +42,8 @@ NULL
 #'
 #' Transform VAR(p) to VMA(infty) then compute Choleski decomposition
 #'
+#' @name identify_long_run_cpp
+#'
 NULL
 
 .identify_longrun_cpp <- function(posterior) {
@@ -47,6 +54,8 @@ NULL
 #'
 #' Choleski decomposition with ordering
 #'
+#' @name identify_shortrun_cpp
+#'
 NULL
 
 .identify_shortrun_cpp <- function(posterior) {
@@ -56,6 +65,8 @@ NULL
 #' Sign restriction identification
 #'
 #' Draw orthonormal matrices Q until the sign restrictions are satisfied
+#'
+#' @name identify_sign_cpp
 #'
 NULL
 

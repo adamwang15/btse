@@ -28,11 +28,11 @@ arma::mat matnrnd_cpp(const arma::mat& M,
 //' @param B m by mp horizontally stacked autoregressive coefficients
 //'
 // [[Rcpp:interface(cpp)]]
-arma::mat companion_cpp(const arma::mat& B) {
-  int m = B.n_rows;
-  int mp = B.n_cols;
+arma::mat companion_cpp(const arma::mat& A) {
+  int mp = A.n_rows;
+  int m = A.n_cols;
 
-  return join_vert(B, eye(mp - m, mp));
+  return join_vert(A.t(), eye(mp - m, mp));
 }
 
 //' QR decomposition, where the diagonal elements of R are positive

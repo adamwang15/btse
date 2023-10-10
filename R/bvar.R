@@ -14,12 +14,12 @@ bvar <- function(Y, p, S, prior) {
     m <- ncol(Y)
     mp <- m * p
 
-    B_0 <- matrix(0, mp, m)
-    B_0[1:m, 1:m] <- diag(m)
+    A_0 <- matrix(0, mp, m)
+    A_0[1:m, 1:m] <- diag(m)
     V_0 <- diag(rep((1:p)^-2, each = m))
     Lambda_0 <- diag(m)
     nu_0 <- 1
-    prior <- list(B_0 = B_0, V_0 = V_0, Lambda_0 = Lambda_0, nu_0 = nu_0)
+    prior <- list(A_0 = A_0, V_0 = V_0, Lambda_0 = Lambda_0, nu_0 = nu_0)
   }
 
   .bvar_cpp(as.matrix(Y), p, S, prior)

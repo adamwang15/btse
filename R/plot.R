@@ -1,14 +1,17 @@
 #' Impulse response function
 #'
-#' Given posterior draws from SVAR model, plot the impulse response function
+#' Given posterior draws from bsvar model, plot the impulse response function
 #'
 #' @param posterior posterior draws with impulse response function
 #'
 #' @export
-plot_irf <- function(posterior, variable_names, shock_names) {
+plot_irf <- function(posterior) {
   IRF <- posterior$IRF
   m <- nrow(IRF)
   periods <- ncol(IRF) / m
+
+  variable_names <- sapply(1:m, \(x) paste("variable", x))
+  shock_names <- sapply(1:m, \(x) paste("shock", x))
 
   IRF <- apply(IRF, c(1, 2), \(x) {
     quantile(x, probs = c(0.500, 0.025, 0.975, 0.160, 0.840))
@@ -26,13 +29,13 @@ plot_irf <- function(posterior, variable_names, shock_names) {
     m * periods
   )
   IRF["shock"] <- rep(rep(shock_names, each = 5), periods)
-  IRF["t"] <- rep(0:(periods - 1), each = 5 * m)
+  IRF["period"] <- rep(0:(periods - 1), each = 5 * m)
 
   IRF <- IRF |>
     tidyr::pivot_longer(variable_names, names_to = "variable") |>
     tidyr::pivot_wider(names_from = "CI", values_from = "value")
 
-  IRF |> ggplot2::ggplot(ggplot2::aes(x = t)) +
+  IRF |> ggplot2::ggplot(ggplot2::aes(x = period)) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::geom_line(ggplot2::aes(y = median)) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_95_lower, ymax = CI_95_upper),

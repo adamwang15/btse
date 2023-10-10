@@ -8,6 +8,8 @@ using namespace arma;
 //'
 //' Draw orthonormal matrices Q until the sign restrictions are satisfied
 //'
+//' @name identify_sign_cpp
+//'
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export(.identify_sign_cpp)]]
 Rcpp::List identify_sign_cpp(Rcpp::List posterior, const arma::mat& sign) {

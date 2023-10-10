@@ -6,6 +6,8 @@ using namespace arma;
 //'
 //' Choleski decomposition with ordering
 //'
+//' @name identify_shortrun_cpp
+//'
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export(.identify_shortrun_cpp)]]
 Rcpp::List identify_shortrun_cpp(Rcpp::List posterior) {
