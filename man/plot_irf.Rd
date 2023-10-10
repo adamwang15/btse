@@ -4,11 +4,13 @@
 \alias{plot_irf}
 \title{Impulse response function}
 \usage{
-plot_irf(posterior)
+plot_irf(posterior, shock_names = NULL)
 }
 \arguments{
 \item{posterior}{posterior draws with impulse response function}
+
+\item{shock_names}{custom shock names in order}
 }
 \description{
-Given posterior draws from bsvar model, plot the impulse response function
+Given posterior draws from bsvar model, plot the impulse response function.
 }

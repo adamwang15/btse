@@ -31,7 +31,7 @@ Rcpp::List identify_longrun_cpp(Rcpp::List posterior) {
     inv_D = inv(D);
 
     // C = chol(D^-1*Sigma*D^-1')
-    // D^-1*u_t = C*e_t => u_t = D*C*e_t
+    // D^-1*u_t = C*e_t => u_t = D*C*e_t i.e. P=D*C
     C = chol(inv_D * Sigma.slice(s) * inv_D.t()).t();
     P.slice(s) = D * C;
   }
