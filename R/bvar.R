@@ -2,7 +2,7 @@
 #' Bayesian Vector Autoregression
 #'
 #' @description
-#' Estimate a Bayesian vector autoregression model with the
+#' Estimate a homoskedastic Bayesian vector autoregression model with the
 #' Normal-Inverse-Wishart conjugate prior.
 #'
 #' @details
@@ -36,7 +36,7 @@
 #' \eqn{A_0} is \eqn{mp \times m} mean matrix of \eqn{A}, \cr
 #' \eqn{V_0} is \eqn{mp \times m} covariance matrix of each column of \eqn{A}, \cr
 #' \eqn{\Lambda_0} is \eqn{m \times m} scale matrix of \eqn{\Sigma}, \cr
-#' \eqn{A_0} is degrees of freedom of \eqn{\Sigma}.
+#' \eqn{\nu_0} is degrees of freedom of \eqn{\Sigma}.
 #'
 #' @export
 bvar <- function(Y, p, S, prior = NULL) {
@@ -71,21 +71,21 @@ bvar <- function(Y, p, S, prior = NULL) {
 #' 1 for positive, -1 for negative, 0 for unrestricted.
 #'
 #' @examples
-#' set.seed(15)
-#'
 #' library(tidyverse)
 #' data("economics")
 #'
 #' df <- economics
-#' df$cstpc <- df$pce / df$pop |> log()
+#' df$consumption <- df$pce / df$pop |> log()
+#' df$saving <- df$psavert
 #'
 #' # bivariate VAR of monthly data on (consumption, saving)
-#' Y <- df[, c(7, 4)]
+#' Y <- df[, 7:8]
 #' p <- 12
 #'
 #' # sign restriction matrix
-#' # | + + |
-#' # | - * |
+#' #             | demand shock | supply shock |
+#' # consumption |      +.      |      +       |
+#' # saving      |      -       |      *       |
 #' sign <- matrix(c(1, -1, 1, 0), nrow = 2)
 #'
 #' posterior <- bsvar(Y, p, 1000, NULL, "sign", sign)

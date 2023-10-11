@@ -17,10 +17,10 @@ bvar(Y, p, S, prior = NULL)
 \eqn{A_0} is \eqn{mp \times m} mean matrix of \eqn{A}, \cr
 \eqn{V_0} is \eqn{mp \times m} covariance matrix of each column of \eqn{A}, \cr
 \eqn{\Lambda_0} is \eqn{m \times m} scale matrix of \eqn{\Sigma}, \cr
-\eqn{A_0} is degrees of freedom of \eqn{\Sigma}.}
+\eqn{\nu_0} is degrees of freedom of \eqn{\Sigma}.}
 }
 \description{
-Estimate a Bayesian vector autoregression model with the
+Estimate a homoskedastic Bayesian vector autoregression model with the
 Normal-Inverse-Wishart conjugate prior.
 }
 \details{

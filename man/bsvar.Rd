@@ -17,7 +17,7 @@ bsvar(Y, p, S, prior, identification, sign = NULL)
 \eqn{A_0} is \eqn{mp \times m} mean matrix of \eqn{A}, \cr
 \eqn{V_0} is \eqn{mp \times m} covariance matrix of each column of \eqn{A}, \cr
 \eqn{\Lambda_0} is \eqn{m \times m} scale matrix of \eqn{\Sigma}, \cr
-\eqn{A_0} is degrees of freedom of \eqn{\Sigma}.}
+\eqn{\nu_0} is degrees of freedom of \eqn{\Sigma}.}
 
 \item{identification}{"short/long/sign" corresponding to
 short-run restriction/long-run restriction/sign restriction.}
@@ -26,7 +26,7 @@ short-run restriction/long-run restriction/sign restriction.}
 1 for positive, -1 for negative, 0 for unrestricted.}
 }
 \description{
-Estimate a Bayesian vector autoregression model with the
+Estimate a homoskedastic Bayesian vector autoregression model with the
 Normal-Inverse-Wishart conjugate prior.
 }
 \details{
@@ -54,21 +54,21 @@ Then, the model can be compactly written as
 \deqn{y_t = A' x_t + P Q e_t}
 }
 \examples{
-set.seed(15)
-
 library(tidyverse)
 data("economics")
 
 df <- economics
-df$cstpc <- df$pce / df$pop |> log()
+df$consumption <- df$pce / df$pop |> log()
+df$saving <- df$psavert
 
 # bivariate VAR of monthly data on (consumption, saving)
-Y <- df[, c(7, 4)]
+Y <- df[, 7:8]
 p <- 12
 
 # sign restriction matrix
-# | + + |
-# | - * |
+#             | demand shock | supply shock |
+# consumption |      +.      |      +       |
+# saving      |      -       |      *       |
 sign <- matrix(c(1, -1, 1, 0), nrow = 2)
 
 posterior <- bsvar(Y, p, 1000, NULL, "sign", sign)

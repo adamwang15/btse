@@ -24,7 +24,7 @@ plot_irf <- function(posterior, shock_names = NULL) {
     quantile(x, probs = c(0.500, 0.025, 0.975, 0.160, 0.840))
   })
 
-  # some data manipulation desired ggplot2 format
+  # some data manipulation for desired ggplot2 format
   temp <- c()
   for (i in 1:dim(IRF)[3]) {
     temp <- rbind(temp, as.matrix(IRF[, , i]))
@@ -53,10 +53,10 @@ plot_irf <- function(posterior, shock_names = NULL) {
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::geom_line(ggplot2::aes(y = median)) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_95_lower, ymax = CI_95_upper),
-      color = NA, fill = "blue", alpha = 0.1
+      color = NA, fill = "dodgerblue", alpha = 0.2
     ) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_68_lower, ymax = CI_68_upper),
-      color = NA, fill = "blue", alpha = 0.2
+      color = NA, fill = "dodgerblue", alpha = 0.5
     ) +
     ggplot2::theme_bw() +
     ggplot2::facet_wrap(~ variable + shock,
