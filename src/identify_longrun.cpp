@@ -35,6 +35,6 @@ Rcpp::List identify_longrun_cpp(Rcpp::List posterior) {
     C = chol(inv_D * Sigma.slice(s) * inv_D.t()).t();
     P.slice(s) = D * C;
   }
-  posterior["PQ"] = P;  // Q=I
+  posterior["B"] = P;  // Q=I
   return posterior;
 }

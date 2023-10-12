@@ -16,6 +16,6 @@ Rcpp::List identify_shortrun_cpp(Rcpp::List posterior) {
   for(int s = 0; s < Sigma.n_slices; s++) {
     P.slice(s) = chol(Sigma.slice(s)).t(); // Choleski decomposition of Sigma
   }
-  posterior["PQ"] = P;  // Q=I
+  posterior["B"] = P;  // Q=I
   return posterior;
 }

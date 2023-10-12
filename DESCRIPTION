@@ -15,3 +15,6 @@ LinkingTo:
 Imports: 
     Rcpp,
     tidyverse
+Depends: 
+    R (>= 2.10)
+LazyData: true

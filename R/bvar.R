@@ -39,18 +39,10 @@
 #' \eqn{\nu_0} is degrees of freedom of \eqn{\Sigma}.
 #'
 #' @export
-bvar <- function(Y, p, S, prior = NULL) {
+bvar <- function(Y, p, S, non_stationary, prior = NULL) {
   # Minnesota-like Prior
   if (is.null(prior)) {
-    m <- ncol(Y)
-    mp <- m * p
-
-    A_0 <- matrix(0, mp, m)
-    A_0[1:m, 1:m] <- diag(m)
-    V_0 <- diag(rep((1:p)^-2, each = m))
-    Lambda_0 <- diag(m)
-    nu_0 <- 1
-    prior <- list(A_0 = A_0, V_0 = V_0, Lambda_0 = Lambda_0, nu_0 = nu_0)
+    prior <- minnesota_prior(Y, p, non_stationary)
   }
 
   posterior <- .bvar_cpp(as.matrix(Y), p, S, prior)
@@ -71,29 +63,9 @@ bvar <- function(Y, p, S, prior = NULL) {
 #' 1 for positive, -1 for negative, 0 for unrestricted.
 #'
 #' @examples
-#' library(tidyverse)
-#' data("economics")
-#'
-#' df <- economics
-#' df$consumption <- df$pce / df$pop |> log()
-#' df$saving <- df$psavert
-#'
-#' # bivariate VAR of monthly data on (consumption, saving)
-#' Y <- df[, 7:8]
-#' p <- 12
-#'
-#' # sign restriction matrix
-#' #             | demand shock | supply shock |
-#' # consumption |      +.      |      +       |
-#' # saving      |      -       |      *       |
-#' sign <- matrix(c(1, -1, 1, 0), nrow = 2)
-#'
-#' posterior <- bsvar(Y, p, 1000, NULL, "sign", sign)
-#' posterior |> plot_irf(c("demand shock", "supply shock"))
-#'
 #' @export
-bsvar <- function(Y, p, S, prior, identification, sign = NULL) {
-  posterior <- bvar(Y, p, S, prior)
+bsvar <- function(Y, p, S, non_stationary, prior = NULL, identification = "short", sign = NULL) {
+  posterior <- bvar(Y, p, S, non_stationary, prior)
 
   if (identification == "short") {
     posterior <- posterior |> .identify_shortrun_cpp()
