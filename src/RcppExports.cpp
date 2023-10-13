@@ -26,28 +26,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // bvar_cpp
-Rcpp::List bvar_cpp(const arma::mat& Y, const int& p, const int& S, const Rcpp::List& prior);
-RcppExport SEXP _btse_bvar_cpp(SEXP YSEXP, SEXP pSEXP, SEXP SSEXP, SEXP priorSEXP) {
+Rcpp::List bvar_cpp(const arma::mat& Y, const int& k, const int& S, const Rcpp::List& prior);
+RcppExport SEXP _btse_bvar_cpp(SEXP YSEXP, SEXP kSEXP, SEXP SSEXP, SEXP priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const int& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const int& >::type k(kSEXP);
     Rcpp::traits::input_parameter< const int& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(bvar_cpp(Y, p, S, prior));
+    rcpp_result_gen = Rcpp::wrap(bvar_cpp(Y, k, S, prior));
     return rcpp_result_gen;
 END_RCPP
 }
 // estimate_irf_cpp
-Rcpp::List estimate_irf_cpp(Rcpp::List posterior, const int& periods);
-RcppExport SEXP _btse_estimate_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP) {
+Rcpp::List estimate_irf_cpp(Rcpp::List posterior, const int& periods, const bool& structural);
+RcppExport SEXP _btse_estimate_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP, SEXP structuralSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
     Rcpp::traits::input_parameter< const int& >::type periods(periodsSEXP);
-    rcpp_result_gen = Rcpp::wrap(estimate_irf_cpp(posterior, periods));
+    Rcpp::traits::input_parameter< const bool& >::type structural(structuralSEXP);
+    rcpp_result_gen = Rcpp::wrap(estimate_irf_cpp(posterior, periods, structural));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -89,7 +90,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_btse_blm_cpp", (DL_FUNC) &_btse_blm_cpp, 4},
     {"_btse_bvar_cpp", (DL_FUNC) &_btse_bvar_cpp, 4},
-    {"_btse_estimate_irf_cpp", (DL_FUNC) &_btse_estimate_irf_cpp, 2},
+    {"_btse_estimate_irf_cpp", (DL_FUNC) &_btse_estimate_irf_cpp, 3},
     {"_btse_identify_longrun_cpp", (DL_FUNC) &_btse_identify_longrun_cpp, 1},
     {"_btse_identify_shortrun_cpp", (DL_FUNC) &_btse_identify_shortrun_cpp, 1},
     {"_btse_identify_sign_cpp", (DL_FUNC) &_btse_identify_sign_cpp, 2},

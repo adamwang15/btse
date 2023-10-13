@@ -4,7 +4,7 @@ using namespace arma;
 
 //' Long-run restriction identification
 //'
-//' Transform VAR(p) to VMA(infty) then compute Choleski decomposition
+//' Transform VAR(k) to VMA(infty) then compute Choleski decomposition
 //'
 //' @name identify_long_run_cpp
 //'
@@ -15,19 +15,20 @@ Rcpp::List identify_longrun_cpp(Rcpp::List posterior) {
   cube Sigma = posterior["Sigma"];
   cube P = cube(size(Sigma), fill::zeros);
 
-  int m = A.n_cols;
-  int p = A.n_rows / m;
-  mat I_m = eye(m, m);
-  mat I_mp = repmat(I_m, 1, p);  // = [I I ...]
+  int N = A.n_cols;
+  int K = A.n_rows;
+  int k = (K - 1) / N;
+  mat I_N = eye(N, N);
+  mat I_Nk = repmat(I_N, 1, k);  // = [I I ...]
 
-  mat C = mat(m, m, fill::zeros);
-  mat D = mat(m, m, fill::zeros);
-  mat inv_D = mat(m, m, fill::zeros);
+  mat C = mat(N, N, fill::zeros);
+  mat D = mat(N, N, fill::zeros);
+  mat inv_D = mat(N, N, fill::zeros);
 
   for(int s = 0; s < Sigma.n_slices; s++) {
     // D = long run MA(infty) coefficients
     // y^LR = (I-A1-A2-...)^-1*u_t = D^-1*u_t = C*e_t
-    D = I_m - I_mp * A.slice(s);
+    D = I_N - I_Nk * A.slice(s).rows(1, K - 1);
     inv_D = inv(D);
 
     // C = chol(D^-1*Sigma*D^-1')

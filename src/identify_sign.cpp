@@ -16,8 +16,8 @@ Rcpp::List identify_sign_cpp(Rcpp::List posterior, const arma::mat& sign) {
   cube Sigma = posterior["Sigma"];
   cube PQ = cube(size(Sigma), fill::zeros);
   // cube Q = cube(size(Sigma), fill::zeros);
-  int m = Sigma.n_rows;
-  int q = sign.n_rows;
+  int N = Sigma.n_rows;
+  int q = sign.n_rows;  // only restricts first q variables
   int target = accu(abs(sign));
 
   for(int s = 0; s < Sigma.n_slices; s++) {
@@ -30,15 +30,13 @@ Rcpp::List identify_sign_cpp(Rcpp::List posterior, const arma::mat& sign) {
       Q_draw = qr_sign_cpp(mat(q, q, fill::randn));
       PQ_draw = P.submat(0, 0, q - 1, q - 1) * Q_draw;
     }
-    mat Q = eye(m, m);
+    mat Q = eye(N, N);
     Q.submat(0, 0, q - 1, q - 1) = Q_draw;
     PQ_draw = P * Q;
 
     PQ.slice(s) = PQ_draw;
-    // Q.slice(s) = Q_draw;
   }
 
-  // posterior["Q"] = Q;
   posterior["B"] = PQ;
   return posterior;
 }

@@ -4,7 +4,7 @@
 #' Bayesian linear model
 #'
 #' Bayesian linear regression with normal-inverse-Wishart conjugate prior
-#' prior: A ~ MN(A_0, V_0, Sigma), Sigma ~ IW(Lambda_0, nu_0)
+#' prior: A ~ MN(A_l, V_l, Sigma), Sigma ~ IW(S_l, v_l)
 #'
 #' @name blm_cpp
 #' @param Y dependent variables
@@ -24,8 +24,8 @@ blm_cpp <- function(Y, X, S, prior) {
 #'
 NULL
 
-.bvar_cpp <- function(Y, p, S, prior) {
-    .Call(`_btse_bvar_cpp`, Y, p, S, prior)
+.bvar_cpp <- function(Y, k, S, prior) {
+    .Call(`_btse_bvar_cpp`, Y, k, S, prior)
 }
 
 #' Estimate impulse response function
@@ -34,13 +34,13 @@ NULL
 #'
 NULL
 
-.estimate_irf_cpp <- function(posterior, periods) {
-    .Call(`_btse_estimate_irf_cpp`, posterior, periods)
+.estimate_irf_cpp <- function(posterior, periods, structural = TRUE) {
+    .Call(`_btse_estimate_irf_cpp`, posterior, periods, structural)
 }
 
 #' Long-run restriction identification
 #'
-#' Transform VAR(p) to VMA(infty) then compute Choleski decomposition
+#' Transform VAR(k) to VMA(infty) then compute Choleski decomposition
 #'
 #' @name identify_long_run_cpp
 #'

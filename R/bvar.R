@@ -39,14 +39,18 @@
 #' \eqn{\nu_0} is degrees of freedom of \eqn{\Sigma}.
 #'
 #' @export
-bvar <- function(Y, p, S, non_stationary, prior = NULL) {
+bvar <- function(Y, k, S = 100, prior_type = "minnesota", prior = NULL) {
   # Minnesota-like Prior
-  if (is.null(prior)) {
-    prior <- minnesota_prior(Y, p, non_stationary)
+  if (prior_type == "minnesota") {
+    prior <- minnesota_prior(Y, k, prior = prior)
+  } else if (prior_type == "manual") {
+    prior <- prior
+  } else {
+    stop("prior_type must be either 'minnesota' or 'manual'")
   }
 
-  posterior <- .bvar_cpp(as.matrix(Y), p, S, prior)
-  posterior$variable_names <- colnames(Y)
+  posterior <- .bvar_cpp(as.matrix(Y), k, S, prior)
+  posterior$names <- colnames(Y)
   posterior
 }
 
@@ -64,8 +68,9 @@ bvar <- function(Y, p, S, non_stationary, prior = NULL) {
 #'
 #' @examples
 #' @export
-bsvar <- function(Y, p, S, non_stationary, prior = NULL, identification = "short", sign = NULL) {
-  posterior <- bvar(Y, p, S, non_stationary, prior)
+bsvar <- function(Y, k, S = 100, prior_type = "minnesota", prior = NULL,
+                  identification = "short", sign = NULL) {
+  posterior <- bvar(Y, k, S, prior_type, prior)
 
   if (identification == "short") {
     posterior <- posterior |> .identify_shortrun_cpp()

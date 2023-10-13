@@ -44,7 +44,7 @@ plot_irf <- function(posterior, shock_names = NULL) {
   # labeller functions, otherwise the ordering will be messy
   labeller_variable <- labeller_shock <- c()
   for (i in 1:m) {
-    labeller_variable[as.character(i)] <- posterior$variable_names[i]
+    labeller_variable[as.character(i)] <- posterior$names[i]
     labeller_shock[as.character(i)] <- shock_names[i]
   }
 
