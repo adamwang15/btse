@@ -39,6 +39,6 @@ Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
     }
   }
 
-  posterior["IRF"] = irf;
+  posterior["irf"] = irf;
   return posterior;
 }

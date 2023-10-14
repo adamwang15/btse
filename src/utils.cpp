@@ -2,9 +2,7 @@
 
 using namespace arma;
 
-//' Random draw from matrix normal
-//'
-//' Make a draw from MN(M, U, V)
+//' Random draw from matrix normal MN(M, U, V)
 //'
 //' @param M mat n by m, mean matrix
 //' @param U mat n by n, covariance matrix of each column
@@ -17,15 +15,41 @@ arma::mat matnrnd_cpp(const arma::mat& M,
   // vec(A*B*C) = kron(A,C')*vec(B)
   // a = chol(A) => a'*a = A, i.e. a' is lower triangular
 
+  mat A = mvnrnd(vectorise(M), kron(V, U));
+  return A.reshape(M.n_rows, M.n_cols);
+
   mat X = mat(size(M), fill::randn);
   return M + chol(U).t() * X * chol(V);
 }
 
-//' Produce mp by mp companion form
+//' Random draw from multivariate normal N(mu, Sigma) given inverse Sigma
 //'
-//' Combine autoregressive coefficients to companion form
+//' @param mu mean vector
+//' @param inv_Sigma precision matrix, inverse of Sigma
 //'
-//' @param B m by mp horizontally stacked autoregressive coefficients
+// [[Rcpp:interface(cpp)]]
+arma::mat mvnrnd_inverse_cpp(const arma::mat& mu, const arma::mat& inv_Sigma) {
+  mat q = chol(inv_Sigma);
+  mat z = mat(size(mu), fill::randn);
+  return mu + inv(q) * z;
+}
+
+//' Random draw from Wishart distribution IW(S, v) given inverse S
+//'
+//' @param inv_S inverse of scale matrix S
+//' @param v degrees of freedom
+//'
+// [[Rcpp:interface(cpp)]]
+arma::mat wishrnd_inverse_cpp(const arma::mat& inv_S, const int& v) {
+  mat A = mat(size(inv_S), fill::randn);
+  mat L = chol(inv_S).t();
+  mat B = L * A;
+  return B * B.t() / v;
+}
+
+//' Produce companion form
+//'
+//' @param A vertically stacked autoregressive coefficients
 //'
 // [[Rcpp:interface(cpp)]]
 arma::mat companion_cpp(const arma::mat& A) {

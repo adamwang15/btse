@@ -4,5 +4,5 @@
 \alias{identify_long_run_cpp}
 \title{Long-run restriction identification}
 \description{
-Transform VAR(p) to VMA(infty) then compute Choleski decomposition
+Transform VAR(k) to VMA(infty) then compute Choleski decomposition
 }

@@ -6,19 +6,19 @@ using namespace arma;
 
 //' Bayesian vector autoregression
 //'
-//' @name bvar_cpp
-//'
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export(.bvar_cpp)]]
 Rcpp::List bvar_cpp(const arma::mat& Y,
                     const int& k,
+                    const std::string& model,
                     const int& S,
+                    const int& burn,
+                    const int& thin,
                     const Rcpp::List& prior) {
   // k = number of lags
   // construct X from Y
   int T = Y.n_rows;
   int N = Y.n_cols;
-  int Nk = N * k;
   mat X = zeros(T - k, N * k);
 
   for(int i = 0; i < k; i++) {
@@ -29,14 +29,10 @@ Rcpp::List bvar_cpp(const arma::mat& Y,
   }
   X = join_horiz(ones(T - k, 1), X);
 
-  return blm_cpp(Y.rows(0, T - k - 1), X, S, prior);
-
-  Rcpp::List posterior = blm_cpp(Y.rows(0, T - k - 1), X, S, prior);
-  cube A = posterior["A"];
-  cube A_noconstant = zeros(Nk, N, S);
-  for(int s = 0; s < S; s++) {
-    A_noconstant.slice(s) = A.slice(s).rows(1, Nk);
+  mat Y_head = Y.rows(0, T - k - 1);
+  if(model == "conjugate") {
+    return blm_conjugate_cpp(Y_head, X, S, prior);
+  } else {
+    return blm_independent_cpp(Y_head, X, S, burn, thin, prior);
   }
-  posterior["A"] = A_noconstant;
-  return posterior;
 }

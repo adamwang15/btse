@@ -11,9 +11,9 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// blm_cpp
-Rcpp::List blm_cpp(const arma::mat& Y, const arma::mat& X, const int& S, const Rcpp::List& prior);
-RcppExport SEXP _btse_blm_cpp(SEXP YSEXP, SEXP XSEXP, SEXP SSEXP, SEXP priorSEXP) {
+// blm_conjugate_cpp
+Rcpp::List blm_conjugate_cpp(const arma::mat& Y, const arma::mat& X, const int& S, const Rcpp::List& prior);
+RcppExport SEXP _btse_blm_conjugate_cpp(SEXP YSEXP, SEXP XSEXP, SEXP SSEXP, SEXP priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,21 +21,40 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const int& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(blm_cpp(Y, X, S, prior));
+    rcpp_result_gen = Rcpp::wrap(blm_conjugate_cpp(Y, X, S, prior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// blm_independent_cpp
+Rcpp::List blm_independent_cpp(const arma::mat& Y, const arma::mat& X, const int& S, const int& burn, const int& thin, const Rcpp::List& prior);
+RcppExport SEXP _btse_blm_independent_cpp(SEXP YSEXP, SEXP XSEXP, SEXP SSEXP, SEXP burnSEXP, SEXP thinSEXP, SEXP priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const int& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const int& >::type burn(burnSEXP);
+    Rcpp::traits::input_parameter< const int& >::type thin(thinSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(blm_independent_cpp(Y, X, S, burn, thin, prior));
     return rcpp_result_gen;
 END_RCPP
 }
 // bvar_cpp
-Rcpp::List bvar_cpp(const arma::mat& Y, const int& k, const int& S, const Rcpp::List& prior);
-RcppExport SEXP _btse_bvar_cpp(SEXP YSEXP, SEXP kSEXP, SEXP SSEXP, SEXP priorSEXP) {
+Rcpp::List bvar_cpp(const arma::mat& Y, const int& k, const std::string& model, const int& S, const int& burn, const int& thin, const Rcpp::List& prior);
+RcppExport SEXP _btse_bvar_cpp(SEXP YSEXP, SEXP kSEXP, SEXP modelSEXP, SEXP SSEXP, SEXP burnSEXP, SEXP thinSEXP, SEXP priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
     Rcpp::traits::input_parameter< const int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type model(modelSEXP);
     Rcpp::traits::input_parameter< const int& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const int& >::type burn(burnSEXP);
+    Rcpp::traits::input_parameter< const int& >::type thin(thinSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(bvar_cpp(Y, k, S, prior));
+    rcpp_result_gen = Rcpp::wrap(bvar_cpp(Y, k, model, S, burn, thin, prior));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -88,8 +107,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_btse_blm_cpp", (DL_FUNC) &_btse_blm_cpp, 4},
-    {"_btse_bvar_cpp", (DL_FUNC) &_btse_bvar_cpp, 4},
+    {"_btse_blm_conjugate_cpp", (DL_FUNC) &_btse_blm_conjugate_cpp, 4},
+    {"_btse_blm_independent_cpp", (DL_FUNC) &_btse_blm_independent_cpp, 6},
+    {"_btse_bvar_cpp", (DL_FUNC) &_btse_bvar_cpp, 7},
     {"_btse_estimate_irf_cpp", (DL_FUNC) &_btse_estimate_irf_cpp, 3},
     {"_btse_identify_longrun_cpp", (DL_FUNC) &_btse_identify_longrun_cpp, 1},
     {"_btse_identify_shortrun_cpp", (DL_FUNC) &_btse_identify_shortrun_cpp, 1},
