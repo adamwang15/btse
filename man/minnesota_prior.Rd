@@ -21,11 +21,11 @@ minnesota_prior(
 
 \item{model}{type of model, either "natural" or "independent"}
 
-\item{lambda_1}{prior variance of intercept}
+\item{lambda_1}{hyper parameter of variance of intercept}
 
-\item{lambda_2}{prior variance of coefficients}
+\item{lambda_2}{hyper parameter variance of coefficients}
 
-\item{lambda_3}{prior decay rate of coefficients}
+\item{lambda_3}{hyper parameter decay rate of coefficients}
 
 \item{prior}{list of priors, might contain "non_stationary" for custom shrinkage}
 }

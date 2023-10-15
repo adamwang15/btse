@@ -7,9 +7,9 @@
 #' @param Y data matrix
 #' @param k lag order
 #' @param model type of model, either "natural" or "independent"
-#' @param lambda_1 prior variance of intercept
-#' @param lambda_2 prior variance of coefficients
-#' @param lambda_3 prior decay rate of coefficients
+#' @param lambda_1 hyper parameter of variance of intercept
+#' @param lambda_2 hyper parameter variance of coefficients
+#' @param lambda_3 hyper parameter decay rate of coefficients
 #' @param prior list of priors, might contain "non_stationary" for custom shrinkage
 #'
 #' @export

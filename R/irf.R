@@ -10,15 +10,14 @@
 #' @export
 irf <- function(posterior, shock_names = NULL) {
   irf <- posterior$irf
-  m <- nrow(irf)
-  print(m)
-  periods <- ncol(irf) / m
+  N <- nrow(irf)
+  periods <- ncol(irf) / N
 
   # naming by order if no input
   if (is.null(shock_names)) {
-    shock_names <- sapply(1:m, \(x) paste("shock", x))
+    shock_names <- sapply(1:N, \(x) paste("shock", x))
   }
-  variable_index <- shock_index <- 1:m
+  variable_index <- shock_index <- 1:N
 
   # median and credible intervals 68% / 95%
   irf <- apply(irf, c(1, 2), \(x) {
@@ -34,23 +33,23 @@ irf <- function(posterior, shock_names = NULL) {
   colnames(irf) <- variable_index
   irf["CI"] <- rep(
     c("median", "CI_95_lower", "CI_95_upper", "CI_68_lower", "CI_68_upper"),
-    m * periods
+    N * periods
   )
   irf["shock"] <- rep(rep(shock_index, each = 5), periods)
-  irf["period"] <- rep(0:(periods - 1), each = 5 * m)
+  irf["period"] <- rep(0:(periods - 1), each = 5 * N)
   irf <- irf |>
     tidyr::pivot_longer(variable_index, names_to = "variable") |>
     tidyr::pivot_wider(names_from = "CI", values_from = "value")
 
   # labeller functions, otherwise the ordering will be messy
   labeller_variable <- labeller_shock <- c()
-  for (i in 1:m) {
+  for (i in 1:N) {
     labeller_variable[as.character(i)] <- posterior$names[i]
     labeller_shock[as.character(i)] <- shock_names[i]
   }
 
   # plot
-  plot <- irf |> ggplot2::ggplot(ggplot2::aes(x = period)) +
+  irf |> ggplot2::ggplot(ggplot2::aes(x = period)) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::geom_line(ggplot2::aes(y = median)) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_95_lower, ymax = CI_95_upper),
@@ -67,11 +66,9 @@ irf <- function(posterior, shock_names = NULL) {
         variable = labeller_variable,
         shock = labeller_shock
       )
+    ) +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank()
     )
-  # ggplot2::theme(
-  #   strip.text = ggplot2::element_blank(),
-  #   strip.background = ggplot2::element_blank()
-  # )
-
-  list(plot = plot, df = irf)
 }
