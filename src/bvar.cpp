@@ -30,9 +30,17 @@ Rcpp::List bvar_cpp(const arma::mat& Y,
   X = join_horiz(ones(T - k, 1), X);
 
   mat Y_head = Y.rows(0, T - k - 1);
+  Rcpp::List posterior;
   if(model == "conjugate") {
-    return blm_conjugate_cpp(Y_head, X, S, prior);
+    posterior = blm_conjugate_cpp(Y_head, X, S, prior);
   } else {
-    return blm_independent_cpp(Y_head, X, S, burn, thin, prior);
+    posterior = blm_independent_cpp(Y_head, X, S, burn, thin, prior);
   }
+
+  Rcpp::List data;
+  data["Y"] = Y_head;
+  data["X"] = X;
+
+  posterior["data"] = data;
+  return posterior;
 }

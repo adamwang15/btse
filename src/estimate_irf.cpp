@@ -6,8 +6,6 @@ using namespace arma;
 
 //' Estimate impulse response function
 //'
-//' @name estimate_irf_cpp
-//'
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export(.estimate_irf_cpp)]]
 Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
@@ -18,26 +16,30 @@ Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
   int N = A.n_cols;
   int K = A.n_rows;
   int S = A.n_slices;
+  int k = (K - 1) / N;
 
-  cube irf = cube(N, N * periods, S);
-  for(int s = 0; s < A.n_slices; s++) {
-    // companion form for MA(infty) representation
-    mat A_companion = companion_cpp(A.slice(s).rows(1, K - 1));
+  std::cout << "#############################" << std::endl;
+  std::cout << "## Computing IRF for draws ##" << std::endl;
+  int progress = S / 10;
 
-    for(int t = 0; t < periods; t++) {
-      // slicing starts with 0, both first and last indices included
-      // IRF = A_companion^j_[1:N,1:N] * B
-      mat A_t = powmat(A_companion, t);
-      A_t = A_t.submat(0, 0, N - 1, N - 1);
-      mat AB;
-      if(structural) {
-        AB = A_t * B.slice(s);
-      } else {
-        AB = A_t;
+  cube irf = zeros(N, N * periods, S);
+  for(int s = 0; s < S; s++) {
+    cube irf_s = zeros(N, N, periods);
+    irf_s.slice(0) = B.slice(s);
+    for(int t = 2; t <= periods; t++) {
+      for(int j = 1; j <= std::min(k, t - 1); j++) {
+        mat A_j = A.slice(s).rows(1 + (j - 1) * N, j * N).t();
+        irf_s.slice(t - 1) += A_j * irf_s.slice(t - j - 1);
       }
-      irf.slice(s).cols(t * N, (t + 1) * N - 1) = AB;
+    }
+    irf_s = reshape(irf_s, N, N * periods, 1);
+    irf.slice(s) = irf_s.slice(0);
+
+    if((s + 1) % progress == 0) {
+      std::cout << "## Progress: [" << s + 1 << "/" << S << "]\r";
     }
   }
+  std::cout << "\n########### Done! ###########" << std::endl;
 
   posterior["irf"] = irf;
   return posterior;

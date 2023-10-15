@@ -19,5 +19,5 @@ identify <- function(posterior, strategy, sign = NULL) {
   } else {
     stop("strategy must be short/long/sign")
   }
-  posterior |> .estimate_irf_cpp(36)
+  posterior
 }

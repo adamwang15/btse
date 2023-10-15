@@ -15,9 +15,10 @@ using namespace arma;
 Rcpp::List identify_sign_cpp(Rcpp::List posterior, const arma::mat& sign) {
   cube Sigma = posterior["Sigma"];
   cube PQ = cube(size(Sigma), fill::zeros);
-  // cube Q = cube(size(Sigma), fill::zeros);
+
   int N = Sigma.n_rows;
-  int q = sign.n_rows;  // only restricts first q variables
+  // only restricts first q variables, the rest of B are keep as identity matrix
+  int q = sign.n_rows;
   int target = accu(abs(sign));
 
   for(int s = 0; s < Sigma.n_slices; s++) {

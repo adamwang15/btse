@@ -14,6 +14,9 @@ Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
                              const arma::mat& X,
                              const int& S,
                              const Rcpp::List& prior) {
+  std::cout << "#############################" << std::endl;
+  std::cout << "## Initializing sampler... ##" << std::endl;
+
   int T = Y.n_rows;
   int N = Y.n_cols;
   int K = X.n_cols;
@@ -48,15 +51,16 @@ Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
     Sigma.slice(s) = Sigma_draw;
     A.slice(s) = A_draw;
 
-    if(s % progress == 0) {
-      std::cout << "MCMC draws: [" << s + 1 << " / " << S << "]" << std::endl;
+    if((s + 1) % progress == 0) {
+      std::cout << "## Draws: [" << s + 1 << "/" << S << "]\r";
     }
   }
+  std::cout << "\n########### Done! ###########" << std::endl;
 
-  Rcpp::List draws;
-  draws["A"] = A;
-  draws["Sigma"] = Sigma;
-  return draws;
+  Rcpp::List posterior;
+  posterior["A"] = A;
+  posterior["Sigma"] = Sigma;
+  return posterior;
 }
 
 //' Bayesian linear model with independent prior
@@ -129,7 +133,7 @@ Rcpp::List blm_independent_cpp(const arma::mat& Y,
     vec_A_draw = mvnrnd_inverse_cpp(vec_A_u, inv_V_u);
 
     if(s % thin == 0) {
-      std::cout << "MCMC draws: [" << s + 1 << " / " << S << "]" << std::endl;
+      std::cout << "MCMC draws: [" << s + 1 << " / " << S << "]\r" << std::endl;
 
       if(s >= burn) {
         A.slice(s_thin) = reshape(vec_A_draw, K, N);

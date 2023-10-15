@@ -56,6 +56,6 @@ bvar <- function(specification, S = 200, burn = 50, thin = 10) {
     Y = as.matrix(specification$Y), k = specification$k, model = specification$model,
     S = S, burn = burn, thin = thin, prior = specification$prior
   )
-  posterior$names <- colnames(specification$Y)
+  posterior$data$names <- colnames(specification$Y)
   posterior
 }

@@ -32,8 +32,6 @@ NULL
 
 #' Estimate impulse response function
 #'
-#' @name estimate_irf_cpp
-#'
 NULL
 
 .estimate_irf_cpp <- function(posterior, periods, structural = TRUE) {

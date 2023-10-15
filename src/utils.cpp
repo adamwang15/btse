@@ -15,9 +15,6 @@ arma::mat matnrnd_cpp(const arma::mat& M,
   // vec(A*B*C) = kron(A,C')*vec(B)
   // a = chol(A) => a'*a = A, i.e. a' is lower triangular
 
-  mat A = mvnrnd(vectorise(M), kron(V, U));
-  return A.reshape(M.n_rows, M.n_cols);
-
   mat X = mat(size(M), fill::randn);
   return M + chol(U).t() * X * chol(V);
 }
@@ -34,7 +31,7 @@ arma::mat mvnrnd_inverse_cpp(const arma::mat& mu, const arma::mat& inv_Sigma) {
   return mu + inv(q) * z;
 }
 
-//' Random draw from Wishart distribution IW(S, v) given inverse S
+//' Random draw from Wishart distribution W(S, v) given inverse S
 //'
 //' @param inv_S inverse of scale matrix S
 //' @param v degrees of freedom
