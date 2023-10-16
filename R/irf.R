@@ -8,8 +8,8 @@
 #' @param shock_names custom shock names in order
 #'
 #' @export
-irf <- function(posterior, periods, shock_names = NULL) {
-  posterior <- .estimate_irf_cpp(posterior, periods)
+irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummulative = FALSE) {
+  posterior <- .estimate_irf_cpp(posterior, periods, structural)
   irf <- posterior$irf
   N <- nrow(irf)
   periods <- ncol(irf) / N
@@ -30,19 +30,33 @@ irf <- function(posterior, periods, shock_names = NULL) {
   for (i in 1:dim(irf)[3]) {
     temp <- rbind(temp, as.matrix(irf[, , i]))
   }
-  irf <- dplyr::as_tibble(temp)
+  irf <- data.frame(temp)
   colnames(irf) <- variable_index
   irf["CI"] <- rep(
-    c("median", "CI_wide_lower", "CI_wide_upper", "CI_narrow_lower", "CI_narrow_upper"),
+    c("median", "ci_wide_lower", "ci_wide_upper", "ci_narrow_lower", "ci_narrow_upper"),
     N * periods
   )
-  irf["shock"] <- rep(rep(shock_index, each = 5), periods)
   irf["period"] <- rep(0:(periods - 1), each = 5 * N)
+  irf["shock"] <- rep(rep(shock_index, each = 5), periods)
+
   irf <- irf |>
     dplyr::filter(shock <= length(shock_names)) |>
     tidyr::pivot_longer(variable_index, names_to = "variable") |>
-    tidyr::pivot_wider(names_from = "CI", values_from = "value")
+    tidyr::pivot_wider(names_from = "CI", values_from = "value") |>
+    dplyr::arrange(period, shock, variable)
 
+  if (cummulative) {
+    irf <- irf |>
+      dplyr::group_by(shock, variable) |>
+      dplyr::mutate(
+        ci_wide_lower = cumsum(ci_wide_lower),
+        ci_wide_upper = cumsum(ci_wide_upper),
+        ci_narrow_lower = cumsum(ci_narrow_lower),
+        ci_narrow_upper = cumsum(ci_narrow_upper),
+        median = cumsum(median)
+      ) |>
+      dplyr::ungroup()
+  }
 
   # labeller functions, otherwise the ordering will be messy
   labeller_variable <- labeller_shock <- c()
@@ -52,13 +66,14 @@ irf <- function(posterior, periods, shock_names = NULL) {
   }
 
   # plot
-  irf |> ggplot2::ggplot(ggplot2::aes(x = period)) +
+  irf |>
+    ggplot2::ggplot(ggplot2::aes(x = period)) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::geom_line(ggplot2::aes(y = median)) +
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_wide_lower, ymax = CI_wide_upper),
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_wide_lower, ymax = ci_wide_upper),
       color = NA, fill = "dodgerblue", alpha = 0.4
     ) +
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_narrow_lower, ymax = CI_narrow_upper),
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_narrow_lower, ymax = ci_narrow_upper),
       color = NA, fill = "dodgerblue", alpha = 0.5
     ) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0))) +

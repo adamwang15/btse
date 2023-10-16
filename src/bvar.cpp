@@ -42,5 +42,6 @@ Rcpp::List bvar_cpp(const arma::mat& Y,
   data["X"] = X;
 
   posterior["data"] = data;
+  posterior["B"] = zeros(1, 1, 1);
   return posterior;
 }

@@ -13,6 +13,7 @@ Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
                             const bool& structural = true) {
   cube A = posterior["A"];
   cube B = posterior["B"];
+
   int N = A.n_cols;
   int K = A.n_rows;
   int S = A.n_slices;
@@ -25,7 +26,15 @@ Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
   cube irf = zeros(N, N * periods, S);
   for(int s = 0; s < S; s++) {
     cube irf_s = zeros(N, N, periods);
-    irf_s.slice(0) = B.slice(s);
+
+    mat B_s;
+    if(structural) {
+      B_s = B.slice(s);
+    } else {
+      B_s = eye(N, N);
+    }
+
+    irf_s.slice(0) = B_s;
     for(int t = 2; t <= periods; t++) {
       for(int j = 1; j <= std::min(k, t - 1); j++) {
         mat A_j = A.slice(s).rows(1 + (j - 1) * N, j * N).t();
