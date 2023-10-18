@@ -69,15 +69,15 @@ irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummu
   irf |>
     ggplot2::ggplot(ggplot2::aes(x = period)) +
     ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::geom_line(ggplot2::aes(y = median)) +
+    ggplot2::geom_line(ggplot2::aes(y = median), linetype = "dashed", alpha = 0.3) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_wide_lower, ymax = ci_wide_upper),
       color = NA, fill = "dodgerblue", alpha = 0.4
     ) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_narrow_lower, ymax = ci_narrow_upper),
-      color = NA, fill = "dodgerblue", alpha = 0.5
+      color = NA, fill = "dodgerblue", alpha = 0.7
     ) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0))) +
-    ggplot2::theme_light() +
+    ggplot2::theme_bw() +
     ggplot2::facet_grid(variable ~ shock,
       switch = "y",
       scales = "free_y",

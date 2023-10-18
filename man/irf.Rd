@@ -4,7 +4,13 @@
 \alias{irf}
 \title{Impulse response function}
 \usage{
-irf(posterior, shock_names = NULL)
+irf(
+  posterior,
+  periods,
+  shock_names = NULL,
+  structural = TRUE,
+  cummulative = FALSE
+)
 }
 \arguments{
 \item{posterior}{posterior draws with impulse response function}

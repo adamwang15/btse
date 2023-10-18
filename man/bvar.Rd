@@ -46,17 +46,11 @@ Then, the model can be compactly written as
 }
 \examples{
 data("fomc")
-
-Y <- fomc[, 2:4]
-k <- 12
-
 sign <- matrix(c(1, -1, 1, 1), nrow = 2)
-specification <- minnesota_prior(Y, k, model = "conjugate")
-posterior <- specification |>
-  bvar(S = 100) |>
-  identify("sign", sign)
-
-irf <- irf(posterior, c("mp", "cbi"))
-irf$plot
+fomc |>
+  minnesota_prior(k = 12) |>
+  bvar(S = 1000) |>
+  identify("sign", sign) |>
+  irf(36, c("mp", "cbi"))
 
 }
