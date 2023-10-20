@@ -58,50 +58,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// estimate_irf_cpp
-Rcpp::List estimate_irf_cpp(Rcpp::List posterior, const int& periods, const bool& structural);
-RcppExport SEXP _btse_estimate_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP, SEXP structuralSEXP) {
+// identify_shortrun
+Rcpp::List identify_shortrun(Rcpp::List posterior);
+RcppExport SEXP _btse_identify_shortrun(SEXP posteriorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
+    rcpp_result_gen = Rcpp::wrap(identify_shortrun(posterior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// identify_longrun
+Rcpp::List identify_longrun(Rcpp::List posterior);
+RcppExport SEXP _btse_identify_longrun(SEXP posteriorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
+    rcpp_result_gen = Rcpp::wrap(identify_longrun(posterior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// identify_sign
+Rcpp::List identify_sign(Rcpp::List posterior, const arma::mat& sign);
+RcppExport SEXP _btse_identify_sign(SEXP posteriorSEXP, SEXP signSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sign(signSEXP);
+    rcpp_result_gen = Rcpp::wrap(identify_sign(posterior, sign));
+    return rcpp_result_gen;
+END_RCPP
+}
+// irf_cpp
+Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods, const bool& structural);
+RcppExport SEXP _btse_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP, SEXP structuralSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
     Rcpp::traits::input_parameter< const int& >::type periods(periodsSEXP);
     Rcpp::traits::input_parameter< const bool& >::type structural(structuralSEXP);
-    rcpp_result_gen = Rcpp::wrap(estimate_irf_cpp(posterior, periods, structural));
-    return rcpp_result_gen;
-END_RCPP
-}
-// identify_longrun_cpp
-Rcpp::List identify_longrun_cpp(Rcpp::List posterior);
-RcppExport SEXP _btse_identify_longrun_cpp(SEXP posteriorSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
-    rcpp_result_gen = Rcpp::wrap(identify_longrun_cpp(posterior));
-    return rcpp_result_gen;
-END_RCPP
-}
-// identify_shortrun_cpp
-Rcpp::List identify_shortrun_cpp(Rcpp::List posterior);
-RcppExport SEXP _btse_identify_shortrun_cpp(SEXP posteriorSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
-    rcpp_result_gen = Rcpp::wrap(identify_shortrun_cpp(posterior));
-    return rcpp_result_gen;
-END_RCPP
-}
-// identify_sign_cpp
-Rcpp::List identify_sign_cpp(Rcpp::List posterior, const arma::mat& sign);
-RcppExport SEXP _btse_identify_sign_cpp(SEXP posteriorSEXP, SEXP signSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type sign(signSEXP);
-    rcpp_result_gen = Rcpp::wrap(identify_sign_cpp(posterior, sign));
+    rcpp_result_gen = Rcpp::wrap(irf_cpp(posterior, periods, structural));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -110,10 +110,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_btse_blm_conjugate_cpp", (DL_FUNC) &_btse_blm_conjugate_cpp, 4},
     {"_btse_blm_independent_cpp", (DL_FUNC) &_btse_blm_independent_cpp, 6},
     {"_btse_bvar_cpp", (DL_FUNC) &_btse_bvar_cpp, 7},
-    {"_btse_estimate_irf_cpp", (DL_FUNC) &_btse_estimate_irf_cpp, 3},
-    {"_btse_identify_longrun_cpp", (DL_FUNC) &_btse_identify_longrun_cpp, 1},
-    {"_btse_identify_shortrun_cpp", (DL_FUNC) &_btse_identify_shortrun_cpp, 1},
-    {"_btse_identify_sign_cpp", (DL_FUNC) &_btse_identify_sign_cpp, 2},
+    {"_btse_identify_shortrun", (DL_FUNC) &_btse_identify_shortrun, 1},
+    {"_btse_identify_longrun", (DL_FUNC) &_btse_identify_longrun, 1},
+    {"_btse_identify_sign", (DL_FUNC) &_btse_identify_sign, 2},
+    {"_btse_irf_cpp", (DL_FUNC) &_btse_irf_cpp, 3},
     {NULL, NULL, 0}
 };
 

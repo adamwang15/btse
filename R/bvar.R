@@ -37,12 +37,12 @@
 #'
 #' @examples
 #' data("fomc")
-#' sign <- matrix(c(1, -1, 1, 1), nrow = 2)
+#' sign_restrictions <- matrix(c(1, -1, 1, 1), nrow = 2)
 #' fomc |>
 #'   minnesota_prior(k = 12) |>
 #'   bvar(S = 1000) |>
-#'   identify("sign", sign) |>
-#'   irf(36, c("mp", "cbi"))
+#'   identify_sign(sign_restrictions) |>
+#'   irf(periods = 36, shock_names = c("mp", "cbi"))
 #'
 #' @export
 bvar <- function(specification, S = 200, burn = 50, thin = 10) {

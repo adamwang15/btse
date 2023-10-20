@@ -30,47 +30,41 @@ NULL
     .Call(`_btse_bvar_cpp`, Y, k, model, S, burn, thin, prior)
 }
 
-#' Estimate impulse response function
+#' Short-run restriction identification
+#'
+#' Choleski decomposition with ordering
 #'
 NULL
-
-.estimate_irf_cpp <- function(posterior, periods, structural = TRUE) {
-    .Call(`_btse_estimate_irf_cpp`, posterior, periods, structural)
-}
 
 #' Long-run restriction identification
 #'
 #' Transform VAR(k) to VMA(infty) then compute Choleski decomposition
 #'
-#' @name identify_long_run_cpp
-#'
 NULL
-
-.identify_longrun_cpp <- function(posterior) {
-    .Call(`_btse_identify_longrun_cpp`, posterior)
-}
-
-#' Short-run restriction identification
-#'
-#' Choleski decomposition with ordering
-#'
-#' @name identify_shortrun_cpp
-#'
-NULL
-
-.identify_shortrun_cpp <- function(posterior) {
-    .Call(`_btse_identify_shortrun_cpp`, posterior)
-}
 
 #' Sign restriction identification
 #'
 #' Draw orthonormal matrices Q until the sign restrictions are satisfied
 #'
-#' @name identify_sign_cpp
+NULL
+
+identify_shortrun <- function(posterior) {
+    .Call(`_btse_identify_shortrun`, posterior)
+}
+
+identify_longrun <- function(posterior) {
+    .Call(`_btse_identify_longrun`, posterior)
+}
+
+identify_sign <- function(posterior, sign) {
+    .Call(`_btse_identify_sign`, posterior, sign)
+}
+
+#' Estimate impulse response function
 #'
 NULL
 
-.identify_sign_cpp <- function(posterior, sign) {
-    .Call(`_btse_identify_sign_cpp`, posterior, sign)
+.irf_cpp <- function(posterior, periods, structural = TRUE) {
+    .Call(`_btse_irf_cpp`, posterior, periods, structural)
 }
 

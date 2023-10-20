@@ -9,7 +9,7 @@
 #'
 #' @export
 irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummulative = FALSE) {
-  posterior <- .estimate_irf_cpp(posterior, periods, structural)
+  posterior <- .irf_cpp(posterior, periods, structural)
   irf <- posterior$irf
   N <- nrow(irf)
   periods <- ncol(irf) / N
@@ -65,21 +65,21 @@ irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummu
     labeller_shock[as.character(i)] <- shock_names[i]
   }
 
+  fill_color <- "#b9d3ee"
   # plot
   irf |>
     ggplot2::ggplot(ggplot2::aes(x = period)) +
-    ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::geom_line(ggplot2::aes(y = median), linetype = "dashed", alpha = 0.3) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_wide_lower, ymax = ci_wide_upper),
-      color = NA, fill = "dodgerblue", alpha = 0.4
+      color = NA, fill = fill_color, alpha = 0.7
     ) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = ci_narrow_lower, ymax = ci_narrow_upper),
-      color = NA, fill = "dodgerblue", alpha = 0.7
+      color = NA, fill = fill_color, alpha = 1
     ) +
+    ggplot2::geom_line(ggplot2::aes(y = median), linetype = 7, color = "#021b8b", alpha = 0.8) +
+    ggplot2::geom_hline(yintercept = 0) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0))) +
     ggplot2::theme_bw() +
     ggplot2::facet_grid(variable ~ shock,
-      switch = "y",
       scales = "free_y",
       labeller = ggplot2::labeller(
         variable = labeller_variable,
@@ -88,6 +88,7 @@ irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummu
     ) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
-      axis.title.y = ggplot2::element_blank()
+      axis.title.y = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
     )
 }

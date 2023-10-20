@@ -7,8 +7,8 @@ using namespace arma;
 //' Estimate impulse response function
 //'
 // [[Rcpp:interface(cpp)]]
-// [[Rcpp::export(.estimate_irf_cpp)]]
-Rcpp::List estimate_irf_cpp(Rcpp::List posterior,
+// [[Rcpp::export(.irf_cpp)]]
+Rcpp::List irf_cpp(Rcpp::List posterior,
                             const int& periods,
                             const bool& structural = true) {
   cube A = posterior["A"];
