@@ -31,29 +31,22 @@ arma::mat mvnrnd_inverse_cpp(const arma::mat& mu, const arma::mat& inv_Sigma) {
   return mu + inv(q) * z;
 }
 
-//' Random draw from Wishart distribution W(S, v) given inverse S
-//'
-//' @param inv_S inverse of scale matrix S
-//' @param v degrees of freedom
-//'
-// [[Rcpp:interface(cpp)]]
-arma::mat wishrnd_inverse_cpp(const arma::mat& inv_S, const int& v) {
-  mat A = mat(size(inv_S), fill::randn);
-  mat L = chol(inv_S).t();
-  mat B = L * A;
-  return B * B.t() / v;
+double log_det_cpp(const arma::mat& L) {
+  return 2 * sum(log(diagvec(L)));
 }
 
-//' Produce companion form
-//'
-//' @param A vertically stacked autoregressive coefficients
-//'
-// [[Rcpp:interface(cpp)]]
-arma::mat companion_cpp(const arma::mat& A) {
-  int mp = A.n_rows;
-  int m = A.n_cols;
+arma::mat inv_chol_cpp(const arma::mat& L) {
+  return solve(trimatu(L.t()), solve(trimatl(L), eye(size(L))));
+}
 
-  return join_vert(A.t(), eye(mp - m, mp));
+double log_mvnpdf_cpp(const arma::mat& x,
+                      const arma::mat& mu,
+                      const arma::mat& inv_Sigma,
+                      const arma::mat& L) {
+  double log_det = log_det_cpp(L);
+  double log_const = -0.5 * (x.n_rows * log(2 * datum::pi) + log_det);
+  mat z = x - mu;
+  return log_const - 0.5 * as_scalar(z.t() * inv_Sigma * z);
 }
 
 //' QR decomposition, where the diagonal elements of R are positive

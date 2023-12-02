@@ -58,6 +58,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// irf_cpp
+Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods);
+RcppExport SEXP _btse_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
+    Rcpp::traits::input_parameter< const int& >::type periods(periodsSEXP);
+    rcpp_result_gen = Rcpp::wrap(irf_cpp(posterior, periods));
+    return rcpp_result_gen;
+END_RCPP
+}
 // identify_shortrun
 Rcpp::List identify_shortrun(Rcpp::List posterior);
 RcppExport SEXP _btse_identify_shortrun(SEXP posteriorSEXP) {
@@ -92,16 +104,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// irf_cpp
-Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods, const bool& structural);
-RcppExport SEXP _btse_irf_cpp(SEXP posteriorSEXP, SEXP periodsSEXP, SEXP structuralSEXP) {
+// kalman_filter
+Rcpp::List kalman_filter(const arma::mat& Y, const arma::cube& Z, const arma::cube& T, const arma::cube& SHS, const arma::cube& RQR, const arma::mat& a_0, const arma::mat& P_0, const bool& smooth);
+RcppExport SEXP _btse_kalman_filter(SEXP YSEXP, SEXP ZSEXP, SEXP TSEXP, SEXP SHSSEXP, SEXP RQRSEXP, SEXP a_0SEXP, SEXP P_0SEXP, SEXP smoothSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type posterior(posteriorSEXP);
-    Rcpp::traits::input_parameter< const int& >::type periods(periodsSEXP);
-    Rcpp::traits::input_parameter< const bool& >::type structural(structuralSEXP);
-    rcpp_result_gen = Rcpp::wrap(irf_cpp(posterior, periods, structural));
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type T(TSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type SHS(SHSSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type RQR(RQRSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type a_0(a_0SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type P_0(P_0SEXP);
+    Rcpp::traits::input_parameter< const bool& >::type smooth(smoothSEXP);
+    rcpp_result_gen = Rcpp::wrap(kalman_filter(Y, Z, T, SHS, RQR, a_0, P_0, smooth));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -110,10 +127,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_btse_blm_conjugate_cpp", (DL_FUNC) &_btse_blm_conjugate_cpp, 4},
     {"_btse_blm_independent_cpp", (DL_FUNC) &_btse_blm_independent_cpp, 6},
     {"_btse_bvar_cpp", (DL_FUNC) &_btse_bvar_cpp, 7},
+    {"_btse_irf_cpp", (DL_FUNC) &_btse_irf_cpp, 2},
     {"_btse_identify_shortrun", (DL_FUNC) &_btse_identify_shortrun, 1},
     {"_btse_identify_longrun", (DL_FUNC) &_btse_identify_longrun, 1},
     {"_btse_identify_sign", (DL_FUNC) &_btse_identify_sign, 2},
-    {"_btse_irf_cpp", (DL_FUNC) &_btse_irf_cpp, 3},
+    {"_btse_kalman_filter", (DL_FUNC) &_btse_kalman_filter, 8},
     {NULL, NULL, 0}
 };
 

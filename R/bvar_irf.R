@@ -8,8 +8,8 @@
 #' @param shock_names custom shock names in order
 #'
 #' @export
-irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummulative = FALSE) {
-  posterior <- .irf_cpp(posterior, periods, structural)
+irf <- function(posterior, periods, shock_names = NULL) {
+  posterior <- .irf_cpp(posterior, periods)
   irf <- posterior$irf
   N <- nrow(irf)
   periods <- ncol(irf) / N
@@ -45,18 +45,18 @@ irf <- function(posterior, periods, shock_names = NULL, structural = TRUE, cummu
     tidyr::pivot_wider(names_from = "CI", values_from = "value") |>
     dplyr::arrange(period, shock, variable)
 
-  if (cummulative) {
-    irf <- irf |>
-      dplyr::group_by(shock, variable) |>
-      dplyr::mutate(
-        ci_wide_lower = cumsum(ci_wide_lower),
-        ci_wide_upper = cumsum(ci_wide_upper),
-        ci_narrow_lower = cumsum(ci_narrow_lower),
-        ci_narrow_upper = cumsum(ci_narrow_upper),
-        median = cumsum(median)
-      ) |>
-      dplyr::ungroup()
-  }
+  # if (cummulative) {
+  #   irf <- irf |>
+  #     dplyr::group_by(shock, variable) |>
+  #     dplyr::mutate(
+  #       ci_wide_lower = cumsum(ci_wide_lower),
+  #       ci_wide_upper = cumsum(ci_wide_upper),
+  #       ci_narrow_lower = cumsum(ci_narrow_lower),
+  #       ci_narrow_upper = cumsum(ci_narrow_upper),
+  #       median = cumsum(median)
+  #     ) |>
+  #     dplyr::ungroup()
+  # }
 
   # labeller functions, otherwise the ordering will be messy
   labeller_variable <- labeller_shock <- c()

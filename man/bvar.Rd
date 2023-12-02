@@ -33,16 +33,14 @@ where \eqn{Y/U} are vertically stacked \eqn{y_t'/u_t'} and \eqn{T \times N},
 Now the homoskedastic conjugate Normal-Inverse-Wishart prior is
 \eqn{u_t|\Sigma\sim MN(0,I,\Sigma)} and
 \deqn{Y|A,\Sigma,X\sim MN(XA,I,\Sigma),\quad
-A|\Sigma\sim MN(A_0,V_0,\Sigma),\quad
-\Sigma\sim IW(\Lambda_0,\nu_0)}
+A|\Sigma\sim MN(\underline A,\underline V,\Sigma),\quad
+\Sigma\sim IW(\underline S,\underline v)}
 For SVAR, the forecast errors \eqn{u_t} can be decomposed to structural shocks \eqn{e_t}
 such that
 \deqn{u_t = B e_t = P Q e_t}
-where \eqn{P,Q} are \eqn{N \times N}, \eqn{P=\text{chol}(\Sigma)} and
+where \eqn{B,P,Q} are \eqn{N \times N}, \eqn{P=\text{chol}(\Sigma)} and
 \eqn{Q} is some orthogonal matrix (usually just the identity matrix \eqn{I}) since
 \deqn{\text{var}(PQe_t)=PQQ'P'=PP'=\Sigma=\text{var}(u_t) \Rightarrow P=\text{chol}(\Sigma)}
-Then, the model can be compactly written as
-\deqn{y_t = A' x_t + P Q e_t}
 }
 \examples{
 data("fomc")

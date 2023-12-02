@@ -30,6 +30,14 @@ NULL
     .Call(`_btse_bvar_cpp`, Y, k, model, S, burn, thin, prior)
 }
 
+#' Estimate impulse response function
+#'
+NULL
+
+.irf_cpp <- function(posterior, periods) {
+    .Call(`_btse_irf_cpp`, posterior, periods)
+}
+
 #' Short-run restriction identification
 #'
 #' Choleski decomposition with ordering
@@ -60,11 +68,11 @@ identify_sign <- function(posterior, sign) {
     .Call(`_btse_identify_sign`, posterior, sign)
 }
 
-#' Estimate impulse response function
+#' Kalman filter for linear Gaussian state space model
 #'
 NULL
 
-.irf_cpp <- function(posterior, periods, structural = TRUE) {
-    .Call(`_btse_irf_cpp`, posterior, periods, structural)
+kalman_filter <- function(Y, Z, T, SHS, RQR, a_0, P_0, smooth = FALSE) {
+    .Call(`_btse_kalman_filter`, Y, Z, T, SHS, RQR, a_0, P_0, smooth)
 }
 
