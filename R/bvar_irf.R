@@ -9,7 +9,7 @@
 #'
 #' @export
 irf <- function(posterior, periods, shock_names = NULL) {
-  posterior <- .irf_cpp(posterior, periods)
+  posterior <- irf_cpp(posterior, periods)
   irf <- posterior$irf
   N <- nrow(irf)
   periods <- ncol(irf) / N

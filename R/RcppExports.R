@@ -30,12 +30,28 @@ NULL
     .Call(`_btse_bvar_cpp`, Y, k, model, S, burn, thin, prior)
 }
 
+#' Estimate one particular draw of impulse response function
+#'
+NULL
+
 #' Estimate impulse response function
 #'
 NULL
 
-.irf_cpp <- function(posterior, periods) {
+#' Estimate historical decomposition
+#'
+NULL
+
+#' Estimate historical decomposition
+#'
+NULL
+
+irf_cpp <- function(posterior, periods) {
     .Call(`_btse_irf_cpp`, posterior, periods)
+}
+
+historical_decomposition_cpp <- function(posterior, var_i, start, end) {
+    .Call(`_btse_historical_decomposition_cpp`, posterior, var_i, start, end)
 }
 
 #' Short-run restriction identification
@@ -50,9 +66,19 @@ NULL
 #'
 NULL
 
+#' If matches traditional sign restriction
+#'
+NULL
+
+#' If matches narrative sign restriction
+#'
+NULL
+
 #' Sign restriction identification
 #'
-#' Draw orthonormal matrices Q until the sign restrictions are satisfied
+NULL
+
+#' Narrative sign restriction identification
 #'
 NULL
 
@@ -66,6 +92,10 @@ identify_longrun <- function(posterior) {
 
 identify_sign <- function(posterior, sign) {
     .Call(`_btse_identify_sign`, posterior, sign)
+}
+
+identify_narrative_sign <- function(posterior, traditional, narrative) {
+    .Call(`_btse_identify_narrative_sign`, posterior, traditional, narrative)
 }
 
 #' Kalman filter for linear Gaussian state space model

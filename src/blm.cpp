@@ -41,17 +41,20 @@ Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
   // draws
   cube A = zeros(K, N, S);
   cube Sigma = zeros(N, N, S);
-  mat A_draw = zeros(K, N);
-  mat Sigma_draw = zeros(N, N);
+  cube U = zeros(T, N, S);
 
-  int progress = S / 10;
+  mat A_s = zeros(K, N);
+  mat Sigma_s = zeros(N, N);
+
+  int progress = floor(S / 10);
   for(int s = 0; s < S; s++) {
-    Sigma_draw = iwishrnd(S_u, v_u);
-    A_draw = matnrnd_cpp(A_u, V_u, Sigma_draw);  // conditional posterior of A
-    Sigma.slice(s) = Sigma_draw;
-    A.slice(s) = A_draw;
+    Sigma_s = iwishrnd(S_u, v_u);
+    A_s = matnrnd_cpp(A_u, V_u, Sigma_s);  // conditional posterior of A
+    Sigma.slice(s) = Sigma_s;
+    A.slice(s) = A_s;
+    U.slice(s) = Y - X * A_s;
 
-    if((s + 1) % progress == 0) {
+    if(progress == 0 || (s + 1) % progress == 0) {
       std::cout << "## Draws: [" << s + 1 << "/" << S << "]\r";
     }
   }
@@ -60,6 +63,7 @@ Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
   Rcpp::List posterior;
   posterior["A"] = A;
   posterior["Sigma"] = Sigma;
+  posterior["U"] = U;
   return posterior;
 }
 
@@ -105,10 +109,10 @@ Rcpp::List blm_independent_cpp(const arma::mat& Y,
   int s_thin = 0;
   cube A = zeros(K, N, S_thin);
   cube Sigma = zeros(N, N, S_thin);
-  mat vec_A_draw = solve(Z.t() * Z, Z.t() * y);
+  mat vec_A_s = solve(Z.t() * Z, Z.t() * y);
 
   // declarations
-  mat S_u, y_t, Z_t, u_t, Sigma_draw, inv_Sigma_draw, inv_V_u, L, vec_A_u;
+  mat S_u, y_t, Z_t, u_t, Sigma_s, inv_Sigma_s, inv_V_u, L, vec_A_u;
   sp_mat ZKIS, KIS;
 
   for(int s = 0; s < S; s++) {
@@ -117,27 +121,27 @@ Rcpp::List blm_independent_cpp(const arma::mat& Y,
     for(int t = 0; t < T; t++) {
       y_t = y.rows(t * N, (t + 1) * N - 1);
       Z_t = Z.rows(t * N, (t + 1) * N - 1);
-      u_t = y_t - Z_t * vec_A_draw;
+      u_t = y_t - Z_t * vec_A_s;
       S_u += u_t * u_t.t();
     }
 
-    Sigma_draw = iwishrnd(S_u, v_u);
-    inv_Sigma_draw = inv_sympd(Sigma_draw);
+    Sigma_s = iwishrnd(S_u, v_u);
+    inv_Sigma_s = inv_sympd(Sigma_s);
 
     // conditional posterior of vec(A) given Sigma
-    KIS = kron(I_T, inv_Sigma_draw);
+    KIS = kron(I_T, inv_Sigma_s);
     ZKIS = Z.t() * KIS;
     inv_V_u = inv_V_l + ZKIS * Z;
     L = chol(inv_V_u).t();
     vec_A_u = solve(L.t(), solve(L, IVVA + ZKIS * y));
-    vec_A_draw = mvnrnd_inverse_cpp(vec_A_u, inv_V_u);
+    vec_A_s = mvnrnd_inverse_cpp(vec_A_u, inv_V_u);
 
     if(s % thin == 0) {
       std::cout << "MCMC draws: [" << s + 1 << " / " << S << "]\r" << std::endl;
 
       if(s >= burn) {
-        A.slice(s_thin) = reshape(vec_A_draw, K, N);
-        Sigma.slice(s_thin) = Sigma_draw;
+        A.slice(s_thin) = reshape(vec_A_s, K, N);
+        Sigma.slice(s_thin) = Sigma_s;
         s_thin++;
       }
     }
