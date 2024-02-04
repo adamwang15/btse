@@ -14,7 +14,7 @@ irf <- function(posterior, horizons, shock_names) {
   }
 
   posterior <- irf_cpp(posterior, horizons)
-  plot_irf(posterior$irf, posterior$data$names, shock_names) |> print()
+  print(plot_irf(posterior$irf, posterior$data$names, shock_names))
   posterior
 }
 
@@ -25,37 +25,31 @@ plot_irf <- function(irf, variable_names, shock_names) {
   S <- length(irf)
   indices <- 1:N
 
-  temp <- array(dim = c(N, N * h, S))
+  stacked_irf <- array(dim = c(N, N * h, S))
   for (s in 1:S) {
-    temp[, , s] <- matrix(irf[[s]], N, N * h)
+    stacked_irf[, , s] <- matrix(irf[[s]], N, N * h)
   }
-  irf <- temp
+  irf <- stacked_irf
 
-  # credible intervals 68%, 50%, 90%
+  # credible intervals 68%, 50%, 90% and some manipulation for ploting
   irf <- apply(irf, c(1, 2), \(x) {
     quantile(x, probs = c(0.05, 0.16, 0.50, 0.84, 0.95))
-  })
-
-  # some data manipulation for desired ggplot2 format
-  temp <- c()
-  for (i in 1:dim(irf)[3]) {
-    temp <- rbind(temp, as.matrix(irf[, , i]))
-  }
-  irf <- data.frame(temp)
-
-  colnames(irf) <- indices
-  irf["ci"] <- rep(c("ci_05", "ci_16", "ci_50", "ci_84", "ci_95"),
-                   N * h)
-  irf["horizon"] <- rep(0:(h - 1), each = 5 * N)
-  irf["shock"] <- rep(rep(indices, each = 5), h)
-
-  irf <- irf |>
+  }) |>
+    aperm(c(1, 3, 2)) |>
+    matrix(nrow = 5 * N * h, ncol = N) |>
+    as.data.frame() |>
+    dplyr::rename_with(~ as.character(indices)) |>
+    dplyr::mutate(ci = rep(c(
+      "ci_05", "ci_16", "ci_50", "ci_84", "ci_95"
+    ), N * h)) |>
+    dplyr::mutate(horizon = rep(0:(h - 1), each = 5 * N)) |>
+    dplyr::mutate(shock = rep(rep(indices, each = 5), h)) |>
     dplyr::filter(shock <= length(shock_names)) |>
     tidyr::pivot_longer(indices, names_to = "variable") |>
     tidyr::pivot_wider(names_from = "ci", values_from = "value") |>
     dplyr::arrange("horizon", "shock", "variable")
 
-  # label functions, otherwise the ordering will be messy
+  # label variables and shocks
   labeller_variable <- labeller_shock <- c()
   for (i in 1:N) {
     labeller_variable[as.character(i)] <- variable_names[i]

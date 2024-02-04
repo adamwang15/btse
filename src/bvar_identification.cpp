@@ -136,7 +136,7 @@ Rcpp::List identify_sign(Rcpp::List posterior, const arma::mat& sign) {
       PQ_draw = P.submat(0, 0, q - 1, q - 1) * Q_draw;
       n_draws++;
     }
-    std::cout << "draws of Q: " << n_draws << std::endl;
+
     mat Q = eye(N, N);
     Q.submat(0, 0, q - 1, q - 1) = Q_draw;
     PQ_draw = P * Q;
