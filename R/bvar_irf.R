@@ -14,7 +14,16 @@ irf <- function(posterior, horizons, shock_names) {
   }
 
   posterior <- irf_cpp(posterior, horizons)
-  print(plot_irf(posterior$irf, posterior$data$names, shock_names))
+
+  # change armadillo field to array
+  S <- length(posterior$irf)
+  irf <- array(NA, c(dim(posterior$irf[[1]]), S))
+  for (s in 1:S) {
+    irf[, , , s] <- posterior$irf[[s]]
+  }
+  posterior$irf <- irf
+
+  print(plot_irf(irf, posterior$data$names, shock_names))
   posterior
 }
 
@@ -30,15 +39,14 @@ irf <- function(posterior, horizons, shock_names) {
 #'
 #' @export
 plot_irf <- function(irf, variable_names, shock_names) {
-  dim_irf <- dim(irf[[1]])
-  N <- dim_irf[1]
-  h <- dim_irf[3]
-  S <- length(irf)
+  N <- dim(irf)[1]
+  h <- dim(irf)[3]
+  S <- dim(irf)[4]
   indices <- 1:N
 
   stacked_irf <- array(dim = c(N, N * h, S))
   for (s in 1:S) {
-    stacked_irf[, , s] <- matrix(irf[[s]], N, N * h)
+    stacked_irf[, , s] <- matrix(irf[, , , s], N, N * h)
   }
   irf <- stacked_irf
 
@@ -49,7 +57,7 @@ plot_irf <- function(irf, variable_names, shock_names) {
     aperm(c(1, 3, 2)) |>
     matrix(nrow = 5 * N * h, ncol = N) |>
     as.data.frame() |>
-    dplyr::rename_with( ~ as.character(indices)) |>
+    dplyr::rename_with(~ as.character(indices)) |>
     dplyr::mutate(ci = rep(c(
       "ci_05", "ci_16", "ci_50", "ci_84", "ci_95"
     ), N * h)) |>
