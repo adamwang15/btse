@@ -17,6 +17,7 @@ Rcpp::List identify_shortrun(Rcpp::List posterior) {
   for(int s = 0; s < Sigma.n_slices; s++) {
     P.slice(s) = chol(Sigma.slice(s)).t();  // Choleski decomposition of Sigma
   }
+
   posterior["B"] = P;  // Q=I
   return posterior;
 }
@@ -129,10 +130,13 @@ Rcpp::List identify_sign(Rcpp::List posterior, const arma::mat& sign) {
     // draw Q till satisfied
     mat Q_draw;
     mat PQ_draw = zeros(q, q);
+    int n_draws = 0;
     while(accu(((PQ_draw % sign) > 0)) < target) {
       Q_draw = qr_sign_cpp(mat(q, q, fill::randn));
       PQ_draw = P.submat(0, 0, q - 1, q - 1) * Q_draw;
+      n_draws++;
     }
+    std::cout << "draws of Q: " << n_draws << std::endl;
     mat Q = eye(N, N);
     Q.submat(0, 0, q - 1, q - 1) = Q_draw;
     PQ_draw = P * Q;

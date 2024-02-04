@@ -40,10 +40,9 @@ Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods) {
   std::cout << "## Computing IRF for draws ##" << std::endl;
   int progress = floor(S / 10);
 
-  cube irf = zeros(N, N * periods, S);
+  arma::field<arma::cube> irf(S);
   for(int s = 0; s < S; s++) {
-    cube irf_s = irf_cpp(A.slice(s), B.slice(s), periods);
-    irf.slice(s) = reshape(irf_s, N, N * periods, 1);
+    irf(s) = irf_cpp(A.slice(s), B.slice(s), periods);
 
     if(progress == 0 || (s + 1) % progress == 0) {
       std::cout << "## Progress: [" << s + 1 << "/" << S << "]\r";
