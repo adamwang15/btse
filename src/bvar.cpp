@@ -4,8 +4,8 @@
 
 using namespace arma;
 
-//' Bayesian vector autoregression
-//'
+// Bayesian vector autoregression
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export(.bvar_cpp)]]
 Rcpp::List bvar_cpp(const arma::mat& Y,

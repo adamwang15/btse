@@ -4,8 +4,8 @@
 
 using namespace arma;
 
-//' Estimate one particular draw of impulse response function
-//'
+// Estimate one particular draw of impulse response function
+//
 // [[Rcpp:interface(cpp)]]
 arma::cube irf_cpp(const arma::mat& A, const arma::mat& B, const int& periods) {
   int N = A.n_cols;
@@ -25,8 +25,8 @@ arma::cube irf_cpp(const arma::mat& A, const arma::mat& B, const int& periods) {
   return irf;
 }
 
-//' Estimate impulse response function
-//'
+// Estimate impulse response function
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods) {
@@ -54,8 +54,8 @@ Rcpp::List irf_cpp(Rcpp::List posterior, const int& periods) {
   return posterior;
 }
 
-//' Estimate historical decomposition
-//'
+// Estimate historical decomposition
+//
 // [[Rcpp:interface(cpp)]]
 arma::mat historical_decomposition_cpp(arma::cube irf,
                                        arma::mat E,
@@ -78,8 +78,8 @@ arma::mat historical_decomposition_cpp(arma::cube irf,
   return hd;
 }
 
-//' Estimate historical decomposition
-//'
+// Estimate historical decomposition
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List historical_decomposition_cpp(Rcpp::List posterior,

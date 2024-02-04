@@ -3,5 +3,6 @@
 export(bvar)
 export(irf)
 export(minnesota_prior)
+export(plot_irf)
 importFrom(Rcpp,sourceCpp)
 useDynLib(btse, .registration = TRUE)

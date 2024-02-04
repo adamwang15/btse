@@ -5,10 +5,10 @@
 
 using namespace arma;
 
-//' Short-run restriction identification
-//'
-//' Choleski decomposition with ordering
-//'
+// Short-run restriction identification
+//
+// Choleski decomposition with ordering
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List identify_shortrun(Rcpp::List posterior) {
@@ -22,10 +22,10 @@ Rcpp::List identify_shortrun(Rcpp::List posterior) {
   return posterior;
 }
 
-//' Long-run restriction identification
-//'
-//' Transform VAR(k) to VMA(infty) then compute Choleski decomposition
-//'
+// Long-run restriction identification
+//
+// Transform VAR(k) to VMA(infty) then compute Choleski decomposition
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List identify_longrun(Rcpp::List posterior) {
@@ -58,15 +58,15 @@ Rcpp::List identify_longrun(Rcpp::List posterior) {
   return posterior;
 }
 
-//' If matches traditional sign restriction
-//'
+// If matches traditional sign restriction
+//
 // [[Rcpp:interface(cpp)]]
 bool traditional_sign_cpp(const arma::mat& B, const arma::mat sign) {
   return accu(((B % sign) > 0)) == accu(abs(sign));
 }
 
-//' If matches narrative sign restriction
-//'
+// If matches narrative sign restriction
+//
 // [[Rcpp:interface(cpp)]]
 bool narrative_sign_cpp(const arma::cube irf,
                         const arma::mat E,
@@ -111,8 +111,8 @@ bool narrative_sign_cpp(const arma::cube irf,
   return match;
 }
 
-//' Sign restriction identification
-//'
+// Sign restriction identification
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List identify_sign(Rcpp::List posterior, const arma::mat& sign) {
@@ -148,8 +148,8 @@ Rcpp::List identify_sign(Rcpp::List posterior, const arma::mat& sign) {
   return posterior;
 }
 
-//' Narrative sign restriction identification
-//'
+// Narrative sign restriction identification
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List identify_narrative_sign(Rcpp::List posterior,

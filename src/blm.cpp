@@ -4,10 +4,10 @@
 
 using namespace arma;
 
-//' Bayesian linear model with natural conjugate prior
-//'
-//' A|Sigma ~ MN(A_l, V_l, Sigma), Sigma ~ IW(S_l, v_l)
-//'
+// Bayesian linear model with natural conjugate prior
+//
+// A|Sigma ~ MN(A_l, V_l, Sigma), Sigma ~ IW(S_l, v_l)
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
@@ -67,11 +67,11 @@ Rcpp::List blm_conjugate_cpp(const arma::mat& Y,
   return posterior;
 }
 
-//' Bayesian linear model with independent prior
-//'
-//' vec_A ~ N(vec_A_l, V_l), Sigma ~ IW(S_l, v_l)
-//' y|vec_A,Sigma ~ N(Z*vec_A, I_T \otimes Sigma)
-//'
+// Bayesian linear model with independent prior
+//
+// vec_A ~ N(vec_A_l, V_l), Sigma ~ IW(S_l, v_l)
+// y|vec_A,Sigma ~ N(Z*vec_A, I_T \otimes Sigma)
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List blm_independent_cpp(const arma::mat& Y,

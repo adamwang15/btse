@@ -2,12 +2,12 @@
 
 using namespace arma;
 
-//' Random draw from matrix normal MN(M, U, V)
-//'
-//' @param M mat n by m, mean matrix
-//' @param U mat n by n, covariance matrix of each column
-//' @param V mat m by m, covariance matrix of each row
-//'
+// Random draw from matrix normal MN(M, U, V)
+//
+// @param M mat n by m, mean matrix
+// @param U mat n by n, covariance matrix of each column
+// @param V mat m by m, covariance matrix of each row
+//
 // [[Rcpp:interface(cpp)]]
 arma::mat matnrnd_cpp(const arma::mat& M,
                       const arma::mat& U,
@@ -19,11 +19,11 @@ arma::mat matnrnd_cpp(const arma::mat& M,
   return M + chol(U).t() * X * chol(V);
 }
 
-//' Random draw from multivariate normal N(mu, Sigma) given inverse Sigma
-//'
-//' @param mu mean vector
-//' @param inv_Sigma precision matrix, inverse of Sigma
-//'
+// Random draw from multivariate normal N(mu, Sigma) given inverse Sigma
+//
+// @param mu mean vector
+// @param inv_Sigma precision matrix, inverse of Sigma
+//
 // [[Rcpp:interface(cpp)]]
 arma::mat mvnrnd_inverse_cpp(const arma::mat& mu, const arma::mat& inv_Sigma) {
   mat q = chol(inv_Sigma);
@@ -49,8 +49,8 @@ double log_mvnpdf_cpp(const arma::mat& x,
   return log_const - 0.5 * as_scalar(z.t() * inv_Sigma * z);
 }
 
-//' QR decomposition, where the diagonal elements of R are positive
-//'
+// QR decomposition, where the diagonal elements of R are positive
+//
 // [[Rcpp:interface(cpp)]]
 arma::mat qr_sign_cpp(const arma::mat& A) {
   arma::mat Q, R;

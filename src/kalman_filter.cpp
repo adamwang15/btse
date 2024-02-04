@@ -4,8 +4,8 @@
 
 using namespace arma;
 
-//' Kalman filter for linear Gaussian state space model
-//'
+// Kalman filter for linear Gaussian state space model
+//
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 Rcpp::List kalman_filter(const arma::mat& Y,
