@@ -43,13 +43,6 @@ minnesota_prior <- function(Y,
   V <- matrix(0, K, K)
   V[1, 1] <- lambda_1
   V[2:K, 2:K] <- diag(lambda_2^2 * rep((1:k)^-(2 * lambda_3), each = N) * rep(ar_s2^-1, k))
-  if (model != "conjugate") {
-    V <- kronecker(diag(ar_s2), V)
-    for (n in 1:N) {
-      idx <- (n - 1) * K + 1
-      V[idx, idx] <- lambda_1
-    }
-  }
 
   S <- diag(ar_s2)
   v <- N + 2
